@@ -18,5 +18,8 @@ namespace JlMetroidvaniaProject.FSM
             m_fsm = fsm;
             m_stateType = stateType;
         }
+
+        public virtual void OnStateEnter() {}
+        public virtual void OnStateFinish() {}
     }
 }

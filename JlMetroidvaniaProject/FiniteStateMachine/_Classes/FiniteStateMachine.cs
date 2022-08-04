@@ -25,13 +25,15 @@ namespace JlMetroidvaniaProject.FSM
             m_states = new FiniteState<T_Instance, T_StateEnum>[enumCount];
 
             InitializeStates();
-            StartStateMachine(initialState);
+            m_StartMachine(initialState);
         }
 
-        public virtual void ChangeState(T_StateEnum nextState)
+        public void ChangeState(T_StateEnum nextState)
         {
+            m_currentState.OnStateFinish();
             m_currentState = nextState;
             m_currentStateIndex = nextState.ToInt32();
+            m_currentState.OnStateEnter();
         }
 
         protected abstract void InitializeStates();
@@ -41,34 +43,20 @@ namespace JlMetroidvaniaProject.FSM
             m_states[stateInstance.type.ToInt32()] = stateInstance;
         }
 
-        protected virtual void StartStateMachine(T_StateEnum initialState)
+        private void m_StartMachine(T_StateEnum initialState)
         {
             m_currentState = initialState;
             m_currentStateIndex = initialState.ToInt32();
+            OnMachineStart();
         }
+
+        protected virtual void OnMachineStart() {}
+        protected virtual void OnStateEnter() {}
+        protected virtual void OnStateFinish() {}
 
         protected bool IsCurrentStateExists()
         {
             return m_states[m_currentStateIndex] != null;
-        }
-
-        protected bool HasInterface<T_Interface>(FiniteState<T_Instance, T_StateEnum> state)
-        where T_Interface : class, IFsmEventInterface
-        {
-            return state is T_Interface;
-        }
-
-        protected bool TryGetInterface<T_Interface>(FiniteState<T_Instance, T_StateEnum> state, out T_Interface interfaceInstance)
-        where T_Interface : class, IFsmEventInterface
-        {
-            bool hasInterface = HasInterface<T_Interface>(state);
-
-            if(hasInterface)
-                interfaceInstance = state as T_Interface;
-            else
-                interfaceInstance = default(T_Interface);
-
-            return hasInterface;
         }
     }
 }
