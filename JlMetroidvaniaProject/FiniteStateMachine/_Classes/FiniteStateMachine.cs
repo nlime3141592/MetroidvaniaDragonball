@@ -6,16 +6,17 @@ namespace JlMetroidvaniaProject.FSM
     where T_Instance : class
     where T_StateEnum : System.Enum
     {
-        public T_Instance instance => m_instance;
-        public T_StateEnum currentState => m_currentState;
+        public T_Instance genericInstance => m_instance;
+        public T_StateEnum currentStateEnum => m_currentStateEnum;
+        public FiniteState<T_Instance, T_StateEnum> currentState => m_states[m_currentStateIndex];
 
         private T_Instance m_instance;
-        private T_StateEnum m_currentState;
+        private T_StateEnum m_currentStateEnum;
         private int m_currentStateIndex;
         private int m_stateCount;
         private FiniteState<T_Instance, T_StateEnum>[] m_states;
 
-        public FiniteStateMachine(T_Instance fsmInstance, T_StateEnum initialState)
+        public FiniteStateMachine(T_Instance fsmInstance, T_StateEnum initialStateEnum)
         {
             m_instance = fsmInstance;
 
@@ -25,28 +26,28 @@ namespace JlMetroidvaniaProject.FSM
             m_states = new FiniteState<T_Instance, T_StateEnum>[enumCount];
 
             InitializeStates();
-            m_StartMachine(initialState);
+            m_StartMachine(initialStateEnum);
         }
 
-        public void ChangeState(T_StateEnum nextState)
+        public void ChangeState(T_StateEnum nextStateEnum)
         {
-            m_currentState.OnStateFinish();
-            m_currentState = nextState;
-            m_currentStateIndex = nextState.ToInt32();
-            m_currentState.OnStateEnter();
+            currentState.OnStateFinish();
+            m_currentStateEnum = nextStateEnum;
+            m_currentStateIndex = nextStateEnum.ToInt32();
+            currentState.OnStateEnter();
         }
 
         protected abstract void InitializeStates();
 
-        protected void SetStateInstance(FiniteState<T_Instance, T_StateEnum> stateInstance)
+        protected void SetStateInstance(FiniteState<T_Instance, T_StateEnum> state)
         {
-            m_states[stateInstance.type.ToInt32()] = stateInstance;
+            m_states[state.type.ToInt32()] = state;
         }
 
-        private void m_StartMachine(T_StateEnum initialState)
+        private void m_StartMachine(T_StateEnum initialStateEnum)
         {
-            m_currentState = initialState;
-            m_currentStateIndex = initialState.ToInt32();
+            m_currentStateEnum = initialStateEnum;
+            m_currentStateIndex = initialStateEnum.ToInt32();
             OnMachineStart();
         }
 

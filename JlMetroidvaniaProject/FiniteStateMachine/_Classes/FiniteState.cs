@@ -6,8 +6,8 @@ namespace JlMetroidvaniaProject.FSM
     where T_Instance : class
     where T_StateEnum : System.Enum
     {
-        public T_Instance instance => m_fsm.instance;
-        public FiniteStateMachine<T_Instance, T_StateEnum> fsm => m_fsm;
+        public T_Instance genericInstance => m_fsm.genericInstance;
+        public FiniteStateMachine<T_Instance, T_StateEnum> genericFSM => m_fsm;
         public T_StateEnum type => m_stateType;
 
         private FiniteStateMachine<T_Instance, T_StateEnum> m_fsm;
