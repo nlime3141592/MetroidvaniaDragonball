@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace JlMetroidvaniaProject
+namespace JlMetroidvaniaProject.UnityDependents
 {
     public class GameKey<T_GameKeyEnum>
     where T_GameKeyEnum : System.Enum
